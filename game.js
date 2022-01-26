@@ -200,9 +200,84 @@ const askQuestion = (question, playerRoom, wumpusRoom, randomRooms, numberOfArro
                 askQuestion(shotOrMoveQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows);
             }
         } else if (question === whereToShootQuestion) {
+            const roomToShoot = Number(answer)
+            if(cave[playerRoom].adjacent.includes(roomToShoot)) {
+                const whatsInTheRoom = cave[roomToShoot].whatsInThere
+
+                if (whatsInTheRoom === wumpus) {
+                    console.log('You win!');
+                    rl.close();
+                } else {
+                    numberOfArrows -= 1
+                    console.log("numberOfArrows: ", numberOfArrows);
+                    if (numberOfArrows === 0) {
+                        console.log('you lost the game');
+                        rl.close();
+                    } else {
+                        console.log('There was nothing in there...')
+                        let wumpusMovingChance = Math.floor(Math.random() * 100)
+                        if (wumpusMovingChance <= 75) {
+                            let newWumpusRoomIndex = Math.floor(Math.random() * 3)
+                            let newWumpusRoom = cave[wumpusRoom].adjacent[newWumpusRoomIndex]
+                            cave[wumpusRoom].whatsInThere = ''
+                            cave[newWumpusRoom].whatsInThere = wumpus
+                            wumpusRoom = newWumpusRoom
+                            randomRooms[0] = newWumpusRoom
+                            //    console.log(randomRooms)
+                            //    console.log("New Wumpus room ", wumpusRoom);
+                            if (wumpusRoom === playerRoom) {
+                                console.log(' Wumpus is here, You died!');
+                                rl.close();
+                            }
+                        }
+                        askQuestion(shotOrMoveQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows)
+                    }
+                }
+            } else {
+                console.log('Wrong input');
+                askQuestion(whereToShootQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows)
+            }
 
         } else if (question === whereToMoveQuestion) {
+            const roomToMove = Number(answer)
+            if(cave[playerRoom].adjacent.includes(roomToMove)) {            // checks right input
+                const whatsInTheRoom = cave[roomToMove].whatsInThere        // find what is in the room?
+                cave[playerRoom].whatsInThere = ''                          // set blank player's previous room
+                playerRoom = roomToMove                                     // set new value to playerRoom as global constant
+                randomRooms[5] = roomToMove                                 // set new value to randomRooms as global const
+                //    console.log(randomRooms)
+                cave[playerRoom].whatsInThere = player                      // change cave AoO value
+                checkRoom(playerRoom)                                       // show to player what's in the adjacent rooms
 
+                if (whatsInTheRoom === bat) {                               // if there's a bat in new room
+                    console.log('But you are going to new room with bat..');
+                    let newRoom = Math.ceil(Math.random() * 20)          // try to find new random player room for bat
+                    while (randomRooms.includes(newRoom)) {                 // check new random player room for bat...
+                        newRoom = Math.ceil(Math.random() * 20)          // used by (pits, bats, player) or not
+                    }                                                       // if used by others, try find not used room
+                    cave[playerRoom].whatsInThere = bat                     // bat returned the old room
+                    playerRoom = newRoom                                    // set player new room
+                    randomRooms[5] = newRoom                                // set player new room in array
+                    //    console.log(randomRooms)
+                    console.log(`You are in room: ${playerRoom}`)
+                    checkRoom(playerRoom)
+                    cave[playerRoom].whatsInThere = player
+                    showAdjacentInformation(playerRoom)
+                    askQuestion(shotOrMoveQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows)
+                } else if (whatsInTheRoom === bottomlessPit) {
+                    console.log('OMQ Bottomless Pit, you dead')
+                    rl.close()
+                } else if (whatsInTheRoom === wumpus) {
+                    console.log('WUMPUS, you dead')
+                    rl.close()
+                } else {
+                    showAdjacentInformation(playerRoom)
+                    askQuestion(shotOrMoveQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows)
+                }
+            }else {
+                console.log('Wrong input');
+                askQuestion(whereToMoveQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows)
+            }
         }
     })
 }
