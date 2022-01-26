@@ -1,6 +1,7 @@
 const textArt = require('./logo.js')
 
-textArt.printLogo()
+ textArt.printLogo()
+
 
 
 const cave = {
@@ -110,7 +111,8 @@ const startGame = () => {
     console.log(`== First bottomless pit is in room: ${randomRooms[4]}`)
     console.log(`You are in room: ${playerRoom}`)
 
-
+    checkRoom(playerRoom)
+    showAdjacentInformation(playerRoom)
 }
 
 const placeEverything = randomRooms => {
@@ -148,6 +150,34 @@ const getRandomRooms = () => {                                      //  random r
     }
 
     return getRandomNumber()
+}
+
+const checkRoom = playerRoom => {                                                   // show info about the player's room..
+    for (let i = 0; i < cave[playerRoom].adjacent.length; i++) {                    // when move to new room
+        switch (cave[cave[playerRoom].adjacent[i]].whatsInThere) {                  // look to adjacent and get number to cave array..
+            case bat:                                                               // check cave.whatsInThere?
+                console.log("You hear a rustling.");
+                break
+            case wumpus:
+                console.log("You smell something terrible nearby.");
+                break
+            case bottomlessPit:
+                console.log("You feel a cold wind blowing from a nearby cavern.");
+                break
+            default:
+                break
+        }
+    }
+}
+
+const showAdjacentInformation = playerRoom => {                                     // show adjacent rooms to player
+    const [
+        firstAdjacent,
+        secondAdjacent,
+        thirdAdjacent
+    ] = cave[playerRoom].adjacent                                                   // get the rooms from cave array
+    let rooms = `Tunnel leads to ${firstAdjacent}. ${secondAdjacent}. ${thirdAdjacent}`
+    console.log(rooms);
 }
 
 
