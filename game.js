@@ -1,4 +1,10 @@
 const textArt = require('./logo.js')
+const readline = require('readline')
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+})
 
  textArt.printLogo()
 
@@ -113,6 +119,7 @@ const startGame = () => {
 
     checkRoom(playerRoom)
     showAdjacentInformation(playerRoom)
+    askQuestion(shotOrMoveQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows);
 }
 
 const placeEverything = randomRooms => {
@@ -178,6 +185,26 @@ const showAdjacentInformation = playerRoom => {                                 
     ] = cave[playerRoom].adjacent                                                   // get the rooms from cave array
     let rooms = `Tunnel leads to ${firstAdjacent}. ${secondAdjacent}. ${thirdAdjacent}`
     console.log(rooms);
+}
+
+const askQuestion = (question, playerRoom, wumpusRoom, randomRooms, numberOfArrows) => {                //  ask question to player
+    rl.question(question, answer => {
+        if (question === shotOrMoveQuestion) {                                                          //  check answer and show the rooms
+            if (answer === 'S') {
+                console.log(`Possible places to shoot ${cave[playerRoom].adjacent}`)                    // If answer right, ask new question...
+                askQuestion(whereToShootQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows)      // with whereToShootQuestion
+            } else if (answer === 'M') {
+                askQuestion(whereToMoveQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows)   // new question with whereToMoveQuestion
+            } else {
+                console.log('Wrong input');                                                             // check right answer, if not again shotOrMoveQuestion
+                askQuestion(shotOrMoveQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows);
+            }
+        } else if (question === whereToShootQuestion) {
+
+        } else if (question === whereToMoveQuestion) {
+
+        }
+    })
 }
 
 
