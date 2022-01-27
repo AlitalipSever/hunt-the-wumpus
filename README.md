@@ -9,8 +9,8 @@ Assumptions:
 Dangerous assets are randomly distributed in different rooms.
 The user starts from a random room.
 After each shot, the number of arrows is shown to the user.
-The bat puts the player in a random room free of other dangerous entities.
-After putting the player in a room, the bat returns to his old room.
+The bat puts the player in a random room without other dangerous entities.
+After putting the player in a room, the bat returns to its old room.
 ```
 
 ```
