@@ -6,7 +6,6 @@ const rl = readline.createInterface({
     output: process.stdout
 })
 
- textArt.printLogo()
 
 
 
@@ -102,20 +101,21 @@ const whereToShootQuestion = 'Where to shoot? '
 const whereToMoveQuestion = 'Where to move? '
 
 const startGame = () => {
-    console.log('The game started');
+    console.log(textArt.logo)
+    console.log('The game started')
 
     const randomRooms = getRandomRooms()                            //  push the room numbers the array
     const playerRoom = randomRooms[5]                               //  get player room
     const wumpusRoom = randomRooms[0]                               //  get wumpus room
     const numberOfArrows = 5
-    console.log(randomRooms)
+//    console.log(randomRooms)
     placeEverything(randomRooms)                                    // place the room number to cave array
-    console.log(`== Wumpus is in room: ${randomRooms[0]}`)
-    console.log(`== First bat is in room: ${randomRooms[1]}`)
-    console.log(`== Second bat is in room: ${randomRooms[2]}`)
-    console.log(`== First bottomless pit is in room: ${randomRooms[3]}`)
-    console.log(`== First bottomless pit is in room: ${randomRooms[4]}`)
-    console.log(`You are in room: ${playerRoom}`)
+//    console.log(`== Wumpus is in room: ${randomRooms[0]}`)        // debugging
+//    console.log(`== First bat is in room: ${randomRooms[1]}`)
+//    console.log(`== Second bat is in room: ${randomRooms[2]}`)
+//    console.log(`== First bottomless pit is in room: ${randomRooms[3]}`)
+//    console.log(`== First bottomless pit is in room: ${randomRooms[4]}`)
+//    console.log(`You are in room: ${playerRoom}`)
 
     checkRoom(playerRoom)
     showAdjacentInformation(playerRoom)
@@ -216,14 +216,13 @@ const askQuestion = (question, playerRoom, wumpusRoom, randomRooms, numberOfArro
                     } else {
                         console.log('There was nothing in there...')
                         let wumpusMovingChance = Math.floor(Math.random() * 100)
-                        if (wumpusMovingChance <= 75) {
+                        if (wumpusMovingChance <= 75) {                                             // wumpus chages the room
                             let newWumpusRoomIndex = Math.floor(Math.random() * 3)
                             let newWumpusRoom = cave[wumpusRoom].adjacent[newWumpusRoomIndex]
                             cave[wumpusRoom].whatsInThere = ''
                             cave[newWumpusRoom].whatsInThere = wumpus
                             wumpusRoom = newWumpusRoom
                             randomRooms[0] = newWumpusRoom
-                            //    console.log(randomRooms)
                             //    console.log("New Wumpus room ", wumpusRoom);
                             if (wumpusRoom === playerRoom) {
                                 console.log(' Wumpus is here, You died!');
@@ -265,10 +264,10 @@ const askQuestion = (question, playerRoom, wumpusRoom, randomRooms, numberOfArro
                     showAdjacentInformation(playerRoom)
                     askQuestion(shotOrMoveQuestion, playerRoom, wumpusRoom, randomRooms, numberOfArrows)
                 } else if (whatsInTheRoom === bottomlessPit) {
-                    console.log('OMQ Bottomless Pit, you dead')
+                    console.log('Bottomless Pit, you dead')
                     rl.close()
                 } else if (whatsInTheRoom === wumpus) {
-                    console.log('WUMPUS, you dead')
+                    console.log('WUMPUS, you died')
                     rl.close()
                 } else {
                     showAdjacentInformation(playerRoom)
@@ -282,5 +281,6 @@ const askQuestion = (question, playerRoom, wumpusRoom, randomRooms, numberOfArro
     })
 }
 
+module.exports = {showAdjacentInformation, checkRoom, getRandomRooms, askQuestion}
 
 startGame()
