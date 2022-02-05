@@ -1,5 +1,6 @@
 const textArt = require('./logo.js')
 const readline = require('readline')
+const colorize = require('./logcolors')
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -101,7 +102,7 @@ const whereToShootQuestion = 'Where to shoot? '
 const whereToMoveQuestion = 'Where to move? '
 
 const startGame = () => {
-    console.log(textArt.logo)
+    console.log(colorize(textArt.logo).blue);
     console.log('The game started')
 
     const randomRooms = getRandomRooms()                            //  push the room numbers the array
